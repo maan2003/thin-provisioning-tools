@@ -309,6 +309,21 @@ fn mk_context(opts: &ThinDeltaOptions) -> Result<Context> {
     })
 }
 
+pub fn delta_with_visitor(opts: ThinDeltaOptions, visitor: &mut dyn DeltaVisitor) -> Result<()> {
+    let ctx = mk_context(&opts)?;
+
+    let sb = if opts.engine_opts.use_metadata_snap {
+        read_superblock_snap(ctx.engine.as_ref())?
+    } else {
+        read_superblock(ctx.engine.as_ref(), SUPERBLOCK_LOCATION)?
+    };
+
+    // ensure the metadata is consistent
+    is_superblock_consistent(sb.clone(), ctx.engine.clone(), false)?;
+
+    dump_diff(ctx.engine, visitor, &sb, opts.snap1, opts.snap2)
+}
+
 pub fn delta(opts: ThinDeltaOptions) -> Result<()> {
     let ctx = mk_context(&opts)?;
 

@@ -42,10 +42,18 @@ pub enum Snap {
 }
 
 pub trait DeltaVisitor {
-    fn superblock_b(&mut self, sb: &ir::Superblock) -> Result<Visit>;
-    fn superblock_e(&mut self) -> Result<Visit>;
-    fn diff_b(&mut self, snap1: Snap, snap2: Snap) -> Result<Visit>;
-    fn diff_e(&mut self) -> Result<Visit>;
+    fn superblock_b(&mut self, sb: &ir::Superblock) -> Result<Visit> {
+        Ok(Visit::Continue)
+    }
+    fn superblock_e(&mut self) -> Result<Visit> {
+        Ok(Visit::Continue)
+    }
+    fn diff_b(&mut self, snap1: Snap, snap2: Snap) -> Result<Visit> {
+        Ok(Visit::Continue)
+    }
+    fn diff_e(&mut self) -> Result<Visit> {
+        Ok(Visit::Continue)
+    }
     fn delta(&mut self, d: &Delta) -> Result<Visit>;
 }
 
